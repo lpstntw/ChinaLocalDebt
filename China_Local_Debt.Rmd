@@ -1,0 +1,83 @@
+---
+title: "Chinese Local Debt"
+author: "Po-Sheng Lee"
+output: github_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE, message = FALSE, warning = FALSE)
+```
+
+```{r package and data}
+
+library(magrittr)
+library(tidyverse)
+library(readxl)
+library(lubridate)
+
+FinancialVehicleDebt <- read_excel("data/LocalGovernmentFinancialVehicleWIND.xlsx", 
+    col_types = c("text", "text", "text", 
+        "text", "numeric", "numeric", "numeric", 
+        "numeric", "date", "numeric", 
+        "numeric", "blank", "text", "text", 
+        "text", "text", "blank", "blank", 
+        "blank", "blank", "blank", "blank", "blank", "blank", 
+        "blank", "blank", "blank", "blank", "blank", "blank", 
+        "blank", "blank", "blank", "blank", "blank", "blank", 
+        "blank"), skip = 1)
+
+GovernmentDebt <- read_excel("data/LocalGovernmentDebt.xlsx", 
+    col_types = c("text", "text", "text", 
+        "text", "numeric", "numeric", "numeric", 
+        "numeric", "date", "numeric", "numeric", 
+        "text", "text", "blank", "blank"), 
+    skip = 1)
+
+
+```
+
+```{r clean data}
+
+FinancialVehicleDebt %<>%
+  distinct(fullname, issueamount, issuerupdated, .keep_all = TRUE) %>%
+  mutate(term = round(term*365/30, digits = 0)) %>%
+  mutate(issue_date = maturitydate - months(term)) %>%
+  mutate(issue_year = year(issue_date))
+
+GovernmentDebt %<>%
+  distinct(fullname, issueamount, issuerupdated, .keep_all = TRUE) %>%
+  mutate(issue_date = maturitydate - years(term)) %>%
+  mutate(issue_year = year(issue_date))
+
+
+
+
+```
+
+
+```{r transform data}
+
+LGFV_industry <- FinancialVehicleDebt %>%
+  filter(!is.na(abs_province) & !is.na(issue_year) & !is.na(abs_industry) == TRUE) %>%
+  group_by(abs_province, issue_year, abs_industry) %>%
+  summarise(FVdebt_issuance = sum(outstandingbalance, na.rm = TRUE))
+
+LGFV_province <- FinancialVehicleDebt %>%
+  filter(!is.na(abs_province) & !is.na(issue_year) == TRUE) %>%
+  group_by(abs_province, issue_year) %>%
+  summarise(FVdebt_issuance = sum(outstandingbalance, na.rm = TRUE))
+
+GovernmentDebt_province <- GovernmentDebt %>%
+  filter(!is.na(abs_province) & !is.na(issue_year) == TRUE) %>%
+  group_by(abs_province, issue_year) %>%
+  summarise(GOVdebt_issuance = sum(outstandingbalance, na.rm = TRUE))
+
+LocalDebt_full <- full_join(LGFV_province, GovernmentDebt_province, by = c("abs_province", "issue_year"))
+
+```
+
+
+
+
+
+
