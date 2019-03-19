@@ -1,0 +1,24 @@
+---
+title: "China Security Spending"
+author: "Po-Sheng Lee"
+output: github_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, message = FALSE, warning = FALSE)
+```
+
+```{r import}
+
+library(magrittr)
+library(tidyverse) 
+library(readr)
+library(readxl)
+library(lubridate)
+library(sf)
+library(leaflet)
+library(viridis)
+source("DataWrangle.R")
+source("2017PublicFinanceDataImport")
+
+```
