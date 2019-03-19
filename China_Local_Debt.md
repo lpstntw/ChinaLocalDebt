@@ -4,7 +4,8 @@ Po-Sheng Lee
 
 -   [Data Processing](#data-processing)
 -   [Top 10 Debt (to Tax) province from 2014 to 2017](#top-10-debt-to-tax-province-from-2014-to-2017)
--   [Mapping the Debt Crisis](#mapping-the-debt-crisis)
+-   [Mapping the Debt](#mapping-the-debt)
+-   [Modeling the Debt](#modeling-the-debt)
 
 Data Processing
 ===============
@@ -327,8 +328,8 @@ debt_analysis %>%
 
 ![](China_Local_Debt_files/figure-markdown_github/column%20chart-8.png)
 
-Mapping the Debt Crisis
-=======================
+Mapping the Debt
+================
 
 ``` r
 china_admin <- st_read("data/chn_admbnda_adm1_ocha/chn_admbnda_adm1_ocha.shp") %>%
@@ -399,6 +400,9 @@ china_admin %>%
 
 ![](China_Local_Debt_files/figure-markdown_github/mapping-5.png)
 
+Modeling the Debt
+=================
+
 ``` r
 debt_regression <- debt_analysis_yearlag %>%
   mutate(population_log = log10(population), GDP_log = log10(GDP), 
@@ -409,7 +413,9 @@ debt_regression <- debt_analysis_yearlag %>%
          revenue_alltax.x_log = log10(revenue_alltax.x), 
          revenue_alltax.y_log = log10(revenue_alltax.y),
          revenue_central_transfer.x_log = log10(revenue_central_transfer.x),
-         revenue_central_transfer.y_log = log10(revenue_central_transfer.y))
+         revenue_central_transfer.y_log = log10(revenue_central_transfer.y),
+         revenue_central_transfer.x_ratio = revenue_central_transfer.x/revenue_alltax.x,
+         revenue_central_transfer.y_ratio = revenue_central_transfer.y/revenue_alltax.y)
 
 ## pooled data 
 
@@ -473,6 +479,30 @@ z.transfer_control_yearlag <- zelig(GOVdebt_to_tax ~ population_log + GDP_log +
                                       revenue_alltax.y_log + revenue_central_transfer.y_log, 
                                     model = "normal", 
                                     data = debt_regression)
+```
+
+    ## How to cite this model in Zelig:
+    ##   R Core Team. 2008.
+    ##   normal: Normal Regression for Continuous Dependent Variables
+    ##   in Christine Choirat, Christopher Gandrud, James Honaker, Kosuke Imai, Gary King, and Olivia Lau,
+    ##   "Zelig: Everyone's Statistical Software," http://zeligproject.org/
+
+``` r
+z.transferratio <- zelig(GOVdebt_to_tax ~ population_log + GDP_log + 
+                           revenue_alltax.x_log + revenue_central_transfer.x_ratio, 
+                         model = "normal", data = debt_regression)
+```
+
+    ## How to cite this model in Zelig:
+    ##   R Core Team. 2008.
+    ##   normal: Normal Regression for Continuous Dependent Variables
+    ##   in Christine Choirat, Christopher Gandrud, James Honaker, Kosuke Imai, Gary King, and Olivia Lau,
+    ##   "Zelig: Everyone's Statistical Software," http://zeligproject.org/
+
+``` r
+z.transferratio_yearlag <- zelig(GOVdebt_to_tax ~ population_log + GDP_log + 
+                                   revenue_alltax.y_log + revenue_central_transfer.y_ratio, 
+                                 model = "normal", data = debt_regression)
 ```
 
     ## How to cite this model in Zelig:
@@ -740,6 +770,74 @@ summary(z.transfer_control_yearlag)
     ## Residual deviance: 17.195  on 84  degrees of freedom
     ##   (179 observations deleted due to missingness)
     ## AIC: 118.25
+    ## 
+    ## Number of Fisher Scoring iterations: 2
+    ## 
+    ## Next step: Use 'setx' method
+
+``` r
+summary(z.transferratio)
+```
+
+    ## Model: 
+    ## 
+    ## Call:
+    ## z5$zelig(formula = GOVdebt_to_tax ~ population_log + GDP_log + 
+    ##     revenue_alltax.x_log + revenue_central_transfer.x_ratio, 
+    ##     data = debt_regression)
+    ## 
+    ## Deviance Residuals: 
+    ##     Min       1Q   Median       3Q      Max  
+    ## -1.0149  -0.3329  -0.1259   0.1988   1.4980  
+    ## 
+    ## Coefficients:
+    ##                                  Estimate Std. Error t value Pr(>|t|)
+    ## (Intercept)                       1.41757    1.01636   1.395 0.168068
+    ## population_log                    0.03688    0.49806   0.074 0.941207
+    ## GDP_log                           1.36184    0.84423   1.613 0.111797
+    ## revenue_alltax.x_log             -2.02255    0.57984  -3.488 0.000901
+    ## revenue_central_transfer.x_ratio -0.04848    0.05027  -0.964 0.338566
+    ## 
+    ## (Dispersion parameter for gaussian family taken to be 0.2486012)
+    ## 
+    ##     Null deviance: 21.958  on 66  degrees of freedom
+    ## Residual deviance: 15.413  on 62  degrees of freedom
+    ##   (201 observations deleted due to missingness)
+    ## AIC: 103.68
+    ## 
+    ## Number of Fisher Scoring iterations: 2
+    ## 
+    ## Next step: Use 'setx' method
+
+``` r
+summary(z.transferratio_yearlag)
+```
+
+    ## Model: 
+    ## 
+    ## Call:
+    ## z5$zelig(formula = GOVdebt_to_tax ~ population_log + GDP_log + 
+    ##     revenue_alltax.y_log + revenue_central_transfer.y_ratio, 
+    ##     data = debt_regression)
+    ## 
+    ## Deviance Residuals: 
+    ##      Min        1Q    Median        3Q       Max  
+    ## -0.77870  -0.31264  -0.05854   0.18076   1.34343  
+    ## 
+    ## Coefficients:
+    ##                                  Estimate Std. Error t value Pr(>|t|)
+    ## (Intercept)                       2.71275    0.78401   3.460 0.000851
+    ## population_log                    0.40322    0.37899   1.064 0.290404
+    ## GDP_log                           0.56123    0.67837   0.827 0.410406
+    ## revenue_alltax.y_log             -1.73005    0.49547  -3.492 0.000768
+    ## revenue_central_transfer.y_ratio -0.08736    0.03342  -2.614 0.010606
+    ## 
+    ## (Dispersion parameter for gaussian family taken to be 0.1977407)
+    ## 
+    ##     Null deviance: 24.475  on 88  degrees of freedom
+    ## Residual deviance: 16.610  on 84  degrees of freedom
+    ##   (179 observations deleted due to missingness)
+    ## AIC: 115.17
     ## 
     ## Number of Fisher Scoring iterations: 2
     ## 

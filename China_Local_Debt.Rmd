@@ -370,7 +370,9 @@ debt_regression <- debt_analysis_yearlag %>%
          revenue_alltax.x_log = log10(revenue_alltax.x), 
          revenue_alltax.y_log = log10(revenue_alltax.y),
          revenue_central_transfer.x_log = log10(revenue_central_transfer.x),
-         revenue_central_transfer.y_log = log10(revenue_central_transfer.y))
+         revenue_central_transfer.y_log = log10(revenue_central_transfer.y),
+         revenue_central_transfer.x_ratio = revenue_central_transfer.x/revenue_alltax.x,
+         revenue_central_transfer.y_ratio = revenue_central_transfer.y/revenue_alltax.y)
 
 ## pooled data 
 
@@ -394,6 +396,14 @@ z.transfer_control_yearlag <- zelig(GOVdebt_to_tax ~ population_log + GDP_log +
                                       revenue_alltax.y_log + revenue_central_transfer.y_log, 
                                     model = "normal", 
                                     data = debt_regression)
+
+z.transferratio <- zelig(GOVdebt_to_tax ~ population_log + GDP_log + 
+                           revenue_alltax.x_log + revenue_central_transfer.x_ratio, 
+                         model = "normal", data = debt_regression)
+
+z.transferratio_yearlag <- zelig(GOVdebt_to_tax ~ population_log + GDP_log + 
+                                   revenue_alltax.y_log + revenue_central_transfer.y_ratio, 
+                                 model = "normal", data = debt_regression)
 
 z.deficit <- zelig(GOVdebt_to_tax ~ population_log + GDP_log + deficit.x_log, 
                    model = "normal", data = debt_regression)
@@ -423,6 +433,8 @@ summary(z.transfer)
 summary(z.transfer_yearlag)
 summary(z.transfer_control)
 summary(z.transfer_control_yearlag)
+summary(z.transferratio)
+summary(z.transferratio_yearlag)
 summary(z.deficit)
 summary(z.deficit_yearlag)
 summary(z.deficit_control)
