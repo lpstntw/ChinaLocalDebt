@@ -422,116 +422,48 @@ debt_regression <- debt_analysis_yearlag %>%
 z.base <- zelig(GOVdebt_to_tax ~ population_log + GDP_log + revenue_alltax.x_log,
                 model = "normal", data = debt_regression)
 ```
-
-    ## How to cite this model in Zelig:
-    ##   R Core Team. 2008.
-    ##   normal: Normal Regression for Continuous Dependent Variables
-    ##   in Christine Choirat, Christopher Gandrud, James Honaker, Kosuke Imai, Gary King, and Olivia Lau,
-    ##   "Zelig: Everyone's Statistical Software," http://zeligproject.org/
-
 ``` r
 z.base_yearlag <- zelig(GOVdebt_to_tax ~ population_log + GDP_log + revenue_alltax.y_log,
                         model = "normal", data = debt_regression)
 ```
-
-    ## How to cite this model in Zelig:
-    ##   R Core Team. 2008.
-    ##   normal: Normal Regression for Continuous Dependent Variables
-    ##   in Christine Choirat, Christopher Gandrud, James Honaker, Kosuke Imai, Gary King, and Olivia Lau,
-    ##   "Zelig: Everyone's Statistical Software," http://zeligproject.org/
-
 ``` r
 z.transfer <- zelig(GOVdebt_to_tax ~ population_log + GDP_log + revenue_central_transfer.x_log, 
                     model = "normal", data = debt_regression)
 ```
-
-    ## How to cite this model in Zelig:
-    ##   R Core Team. 2008.
-    ##   normal: Normal Regression for Continuous Dependent Variables
-    ##   in Christine Choirat, Christopher Gandrud, James Honaker, Kosuke Imai, Gary King, and Olivia Lau,
-    ##   "Zelig: Everyone's Statistical Software," http://zeligproject.org/
-
 ``` r
 z.transfer_yearlag <- zelig(GOVdebt_to_tax ~ population_log + GDP_log + revenue_central_transfer.y_log, 
                             model = "normal", data = debt_regression)
 ```
-
-    ## How to cite this model in Zelig:
-    ##   R Core Team. 2008.
-    ##   normal: Normal Regression for Continuous Dependent Variables
-    ##   in Christine Choirat, Christopher Gandrud, James Honaker, Kosuke Imai, Gary King, and Olivia Lau,
-    ##   "Zelig: Everyone's Statistical Software," http://zeligproject.org/
-
 ``` r
 z.transfer_control <- zelig(GOVdebt_to_tax ~ population_log + GDP_log + revenue_alltax.x_log + 
                               revenue_central_transfer.x_log, model = "normal", 
                             data = debt_regression)
 ```
-
-    ## How to cite this model in Zelig:
-    ##   R Core Team. 2008.
-    ##   normal: Normal Regression for Continuous Dependent Variables
-    ##   in Christine Choirat, Christopher Gandrud, James Honaker, Kosuke Imai, Gary King, and Olivia Lau,
-    ##   "Zelig: Everyone's Statistical Software," http://zeligproject.org/
-
 ``` r
 z.transfer_control_yearlag <- zelig(GOVdebt_to_tax ~ population_log + GDP_log + 
                                       revenue_alltax.y_log + revenue_central_transfer.y_log, 
                                     model = "normal", 
                                     data = debt_regression)
 ```
-
-    ## How to cite this model in Zelig:
-    ##   R Core Team. 2008.
-    ##   normal: Normal Regression for Continuous Dependent Variables
-    ##   in Christine Choirat, Christopher Gandrud, James Honaker, Kosuke Imai, Gary King, and Olivia Lau,
-    ##   "Zelig: Everyone's Statistical Software," http://zeligproject.org/
-
 ``` r
 z.transferratio <- zelig(GOVdebt_to_tax ~ population_log + GDP_log + 
                            revenue_alltax.x_log + revenue_central_transfer.x_ratio, 
                          model = "normal", data = debt_regression)
 ```
-
-    ## How to cite this model in Zelig:
-    ##   R Core Team. 2008.
-    ##   normal: Normal Regression for Continuous Dependent Variables
-    ##   in Christine Choirat, Christopher Gandrud, James Honaker, Kosuke Imai, Gary King, and Olivia Lau,
-    ##   "Zelig: Everyone's Statistical Software," http://zeligproject.org/
-
 ``` r
 z.transferratio_yearlag <- zelig(GOVdebt_to_tax ~ population_log + GDP_log + 
                                    revenue_alltax.y_log + revenue_central_transfer.y_ratio, 
                                  model = "normal", data = debt_regression)
 ```
-
-    ## How to cite this model in Zelig:
-    ##   R Core Team. 2008.
-    ##   normal: Normal Regression for Continuous Dependent Variables
-    ##   in Christine Choirat, Christopher Gandrud, James Honaker, Kosuke Imai, Gary King, and Olivia Lau,
-    ##   "Zelig: Everyone's Statistical Software," http://zeligproject.org/
-
 ``` r
 z.deficit <- zelig(GOVdebt_to_tax ~ population_log + GDP_log + deficit.x_log, 
                    model = "normal", data = debt_regression)
 ```
 
-    ## How to cite this model in Zelig:
-    ##   R Core Team. 2008.
-    ##   normal: Normal Regression for Continuous Dependent Variables
-    ##   in Christine Choirat, Christopher Gandrud, James Honaker, Kosuke Imai, Gary King, and Olivia Lau,
-    ##   "Zelig: Everyone's Statistical Software," http://zeligproject.org/
-
 ``` r
 z.deficit_yearlag <- zelig(GOVdebt_to_tax ~ population_log + GDP_log + deficit.y_log, 
                            model = "normal", data = debt_regression)
 ```
-
-    ## How to cite this model in Zelig:
-    ##   R Core Team. 2008.
-    ##   normal: Normal Regression for Continuous Dependent Variables
-    ##   in Christine Choirat, Christopher Gandrud, James Honaker, Kosuke Imai, Gary King, and Olivia Lau,
-    ##   "Zelig: Everyone's Statistical Software," http://zeligproject.org/
 
 ``` r
 z.deficit_control <- zelig(GOVdebt_to_tax ~ population_log + GDP_log + revenue_alltax.x_log + 
@@ -539,23 +471,11 @@ z.deficit_control <- zelig(GOVdebt_to_tax ~ population_log + GDP_log + revenue_a
                            data = debt_regression)
 ```
 
-    ## How to cite this model in Zelig:
-    ##   R Core Team. 2008.
-    ##   normal: Normal Regression for Continuous Dependent Variables
-    ##   in Christine Choirat, Christopher Gandrud, James Honaker, Kosuke Imai, Gary King, and Olivia Lau,
-    ##   "Zelig: Everyone's Statistical Software," http://zeligproject.org/
-
 ``` r
 z.deficit_control_yearlag <- zelig(GOVdebt_to_tax ~ population_log + GDP_log + revenue_alltax.y_log + 
                                      deficit.y_log, model = "normal", 
                                    data = debt_regression)
 ```
-
-    ## How to cite this model in Zelig:
-    ##   R Core Team. 2008.
-    ##   normal: Normal Regression for Continuous Dependent Variables
-    ##   in Christine Choirat, Christopher Gandrud, James Honaker, Kosuke Imai, Gary King, and Olivia Lau,
-    ##   "Zelig: Everyone's Statistical Software," http://zeligproject.org/
 
 ``` r
 z.all <- zelig(GOVdebt_to_tax ~ population_log + GDP_log + revenue_alltax.x_log + 
@@ -563,23 +483,11 @@ z.all <- zelig(GOVdebt_to_tax ~ population_log + GDP_log + revenue_alltax.x_log 
                model = "normal", data = debt_regression)
 ```
 
-    ## How to cite this model in Zelig:
-    ##   R Core Team. 2008.
-    ##   normal: Normal Regression for Continuous Dependent Variables
-    ##   in Christine Choirat, Christopher Gandrud, James Honaker, Kosuke Imai, Gary King, and Olivia Lau,
-    ##   "Zelig: Everyone's Statistical Software," http://zeligproject.org/
-
 ``` r
 z.all_yearlag <- zelig(GOVdebt_to_tax ~ population_log + GDP_log + revenue_alltax.y_log + 
                          deficit.y_log + revenue_central_transfer.y_log,
                        model = "normal", data = debt_regression)
 ```
-
-    ## How to cite this model in Zelig:
-    ##   R Core Team. 2008.
-    ##   normal: Normal Regression for Continuous Dependent Variables
-    ##   in Christine Choirat, Christopher Gandrud, James Honaker, Kosuke Imai, Gary King, and Olivia Lau,
-    ##   "Zelig: Everyone's Statistical Software," http://zeligproject.org/
 
 ``` r
 summary(z.base)
