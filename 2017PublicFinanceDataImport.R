@@ -31,7 +31,7 @@ public_finance_2017 <- ImportData2017("Anhui") %>%
   left_join(ImportData2017("Qinghai")) %>%
   left_join(ImportData2017("Shandong")) %>%
   left_join(ImportData2017("Shanghai")) %>%
-  left_join(ImportData2017("Shannxi")) %>%
+  left_join(ImportData2017("Shaanxi")) %>%
   left_join(ImportData2017("Shanxi")) %>%
   left_join(ImportData2017("Sichuan")) %>%
   left_join(ImportData2017("Tianjin")) %>%
@@ -44,7 +44,7 @@ public_finance_2017 %<>%
   mutate(year = 2017) %>%
   gather(Anhui, Beijing, Chongqing, Fujian, Gansu, Guangdong, Guangxi, Guizhou, Hainan, Hebei,
          Heilongjiang, Henan, Hubei, Hunan, `Inner Mongolia`, Jiangsu, Jiangxi, Jilin, Liaoning,
-         Ningxia, Qinghai, Shandong, Shanghai, Shannxi, Shanxi, Sichuan, Tianjin, Tibet, Xinjiang,
+         Ningxia, Qinghai, Shandong, Shanghai, Shaanxi, Shanxi, Sichuan, Tianjin, Tibet, Xinjiang,
          Yunnan, Zhejiang, key = "en_province", value = "num") %>%
   drop_na(num) %>%
   spread(variable, num)
@@ -102,7 +102,7 @@ public_finance_2017_tidy <- public_finance_2017 %>%
                            Henan = "河南省", Hubei = "湖北省", Hunan = "湖南省", 
                            `Inner Mongolia` = "内蒙古自治区", Jiangsu =  "江苏省",Jiangxi = "江西省",
                            Jilin = "吉林省", Liaoning = "辽宁省", Qinghai = "青海省",
-                           Shannxi = "陕西省", Shandong =  "山东省", Shanghai = "上海市",
+                           Shaanxi = "陕西省", Shandong =  "山东省", Shanghai = "上海市",
                            Shanxi = "山西省", Sichuan = "四川省", Tianjin = "天津市",
                            Tibet = "西藏自治区", Xinjiang = "新疆维吾尔自治区", Yunnan = "云南省",
                            Ningxia = "宁夏回族自治区", Zhejiang = "浙江省"))
@@ -184,4 +184,4 @@ public_finance_2014_17_all_tidy <- bind_rows(public_finance_all_tidy, public_fin
 write_csv(public_finance_2014_17_all_tidy, path = "data/public finance/All Province 2014 - 17.csv")
 
   
-  
+saveRDS(public_finance_2014_17_all_tidy, file = "public finance from 2014 to 2017")

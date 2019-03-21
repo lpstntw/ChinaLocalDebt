@@ -56,7 +56,7 @@ LocalDebt_full %<>%
                               河南省 = "Henan", 湖北省 = "Hubei", 湖南省 = "Hunan", 
                               内蒙古自治区 = "Inner Mongolia", 江苏省 = "Jiangsu", 江西省 = "Jiangxi",
                               吉林省 = "Jilin", 辽宁省 = "Liaoning", 青海省 = "Qinghai",
-                              陕西省 = "Shannxi", 山东省 = "Shandong", 上海市 = "Shanghai",
+                              陕西省 = "Shaanxi", 山东省 = "Shandong", 上海市 = "Shanghai",
                               山西省 = "Shanxi", 四川省 = "Sichuan", 天津市 = "Tianjin",
                               西藏自治区 = "Tibet", 新疆维吾尔自治区 = "Xinjiang", 云南省 = "Yunnan",
                               宁夏回族自治区 = "Ningxia", 浙江省 = "Zhejiang")) %>%
@@ -125,7 +125,7 @@ public_finance_all <- read_excel("data/public finance/Anhui 2014-2016.xlsx",
                         col_types = c("text", "text", "numeric", "numeric", "numeric")))) %>%
   bind_rows((read_excel("data/public finance/Shanghai 2014 - 2016.xlsx", 
                         col_types = c("text", "text", "numeric", "numeric", "numeric")))) %>%
-  bind_rows((read_excel("data/public finance/Shannxi 2014 - 2016.xlsx", 
+  bind_rows((read_excel("data/public finance/shaanxi 2014 - 2016.xlsx", 
                         col_types = c("text", "text", "numeric", "numeric", "numeric")))) %>%
   bind_rows((read_excel("data/public finance/Shanxi 2014 - 2016.xlsx", 
                         col_types = c("text", "text", "numeric", "numeric", "numeric")))) %>%
@@ -152,11 +152,12 @@ public_finance_all %<>%
                               河南省 = "Henan", 湖北省 = "Hubei", 湖南省 = "Hunan", 
                               内蒙古自治区 = "Inner Mongolia", 江苏省 = "Jiangsu", 江西省 = "Jiangxi",
                               吉林省 = "Jilin", 辽宁省 = "Liaoning", 青海省 = "Qinghai",
-                              陕西省 = "Shannxi", 山东省 = "Shandong", 上海市 = "Shanghai",
+                              陕西省 = "Shaanxi", 山东省 = "Shandong", 上海市 = "Shanghai",
                               山西省 = "Shanxi", 四川省 = "Sichuan", 天津市 = "Tianjin",
                               西藏自治区 = "Tibet", 新疆维吾尔自治区 = "Xinjiang", 云南省 = "Yunnan",
                               宁夏回族自治区 = "Ningxia",浙江省 = "Zhejiang"))
 
+source("2017PublicFinanceDataImport.R")
 
 public_finance <- public_finance_2014_17_all_tidy %>%
   select(province, en_province, year, revenue_all, revenue_alltax, revenue_allnontax, 
@@ -164,7 +165,6 @@ public_finance <- public_finance_2014_17_all_tidy %>%
          revenue_landappr_tax, revenue_central_transfer, revenue_debt_onbook,
          spending_all, spending_debtservice, total_balance) %>%
   mutate(year_lag = year + 1)
-
 population_full <- read_csv("data/Population by province.csv", 
                             col_types = cols(`2018` = col_skip()), skip = 3)
 

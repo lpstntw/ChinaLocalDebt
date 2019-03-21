@@ -1,12 +1,21 @@
 ---
 title: "China Security Spending"
 author: "Po-Sheng Lee"
-output: github_document
+output: 
+  github_document: 
+    toc: TRUE
 ---
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE, message = FALSE, warning = FALSE)
+knitr::opts_chunk$set(echo = FALSE, message = FALSE, warning = FALSE)
 ```
+
+# Introduction
+
+This is a byproduct of my project on local government debt in China and is inspired by a commentary piece by [Bruce Lui](https://news.mingpao.com/ins/文摘/article/20190313/s00022/1552399346888/中國維穩地圖-廣東「辣過」新疆（文-呂秉權）). In that piece, Lui, a reporter of RTHK implies that the survilliance in Guangzhou is *spiceier* than Xinjiang due to the higher spending in security. This headline, of course, can catch the eyeball of Hong Kong readers.
+
+However, to gauge the intensity of security, there should be some better indicators, such as spending to tax ratio or per capita security spending. Since I've collected the data of provincial governmental spending from 2014 to 2017 for my local debt project, it is easy to visualize these data.
+
 
 ```{r import}
 
@@ -19,6 +28,193 @@ library(sf)
 library(leaflet)
 library(viridis)
 source("DataWrangle.R")
-source("2017PublicFinanceDataImport")
 
 ```
+
+```{r preparing data}
+
+public_finance_2014_17_all_tidy <- readRDS("public finance from 2014 to 2017")
+
+security_spending <- public_finance_2014_17_all_tidy %>%
+  left_join(GDP, by = c("en_province" = "Region", "year")) %>%
+  left_join(population, by = c("en_province" = "Region", "year")) %>%
+  mutate(region = case_when(
+    province %in% c("黑龙江省","吉林省","辽宁省") ~ "northeast",
+    province %in% c("山西省", "河南省", "湖北省", "湖南省", "江西省", "安徽省") ~ "central",
+    province %in% c("北京市", "天津市", "河北省", "山东省", "江苏省", "上海市", 
+                      "浙江省", "福建省", "广东省", "海南省") ~ "east",
+    province %in% c("重庆市", "四川省", "广西壮族自治区", "贵州省", "云南省", "陕西省", "甘肃省", 
+                      "内蒙古自治区", "宁夏回族自治区", "新疆维吾尔自治区", 
+                      "青海省", "西藏自治区") ~ "west")) %>%
+  select(province, en_province, year, region, population, GDP, revenue_all, revenue_alltax, 
+         revenue_allnontax, revenue_central_transfer, 
+         spending_all, spending_urbanaffairs, spending_security) %>%
+  mutate(security_capita = (spending_security/population)*10^4, security_GDP_ratio = spending_security/GDP,
+         security_allspending_ratio = spending_security/spending_all, 
+         security_allrevenue_ratio = spending_security/revenue_all,
+         security_alltax_ratio = spending_security/revenue_alltax)
+
+```
+
+# Security Spending in coulumn chart
+
+As we can see from the chart, the per capita and security to GDP ratio shows quite a different story. Xinjiang used to be at lower rank but surge to the second place in 2017. And Tibet continuously remains at the first place (sad story).
+
+```{r bar chart security spending}
+
+security_spending %>%
+  filter(year == 2014) %>%
+  top_n(n = 15, wt = spending_security) %>%
+  ggplot(aes(x = reorder(factor(en_province), spending_security), y = spending_security, fill = region)) +
+  geom_col() + 
+  coord_flip() +
+  labs(title = "Top security spending 2014", 
+       x = "Provinces", y = "Security Spending (100 million yuan)")
+
+security_spending %>%
+  filter(year == 2015) %>%
+  top_n(n = 15, wt = spending_security) %>%
+  ggplot(aes(x = reorder(factor(en_province), spending_security), y = spending_security, fill = region)) +
+  geom_col() + 
+  coord_flip() +
+  labs(title = "Top security spending 2015", 
+       x = "Provinces", y = "Security Spending (100 million yuan)")
+
+security_spending %>%
+  filter(year == 2016) %>%
+  top_n(n = 15, wt = spending_security) %>%
+  ggplot(aes(x = reorder(factor(en_province), spending_security), y = spending_security, fill = region)) +
+  geom_col() + 
+  coord_flip() +
+  labs(title = "Top security spending 2016", 
+       x = "Provinces", y = "Security Spending (100 million yuan)")
+
+security_spending %>%
+  filter(year == 2017) %>%
+  top_n(n = 15, wt = spending_security) %>%
+  ggplot(aes(x = reorder(factor(en_province), spending_security), y = spending_security, fill = region)) +
+  geom_col() + 
+  coord_flip() +
+  labs(title = "Top security spending 2017", 
+       x = "Provinces", y = "Security Spending (100 million yuan)")
+
+security_spending %>%
+  filter(year == 2014) %>%
+  top_n(n = 15, wt = security_capita) %>%
+  ggplot(aes(x = reorder(factor(en_province), security_capita), y = security_capita, fill = region)) +
+  geom_col() + 
+  coord_flip() +
+  labs(title = "Top security per capita in 2014", 
+       x = "Provinces", y = "Security Spending per capita")
+
+security_spending %>%
+  filter(year == 2015) %>%
+  top_n(n = 15, wt = security_capita) %>%
+  ggplot(aes(x = reorder(factor(en_province), security_capita), y = security_capita, fill = region)) +
+  geom_col() + 
+  coord_flip() +
+  labs(title = "Top security per capita in 2015", 
+       x = "Provinces", y = "Security Spending per capita")
+
+security_spending %>%
+  filter(year == 2016) %>%
+  top_n(n = 15, wt = security_capita) %>%
+  ggplot(aes(x = reorder(factor(en_province), security_capita), y = security_capita, fill = region)) +
+  geom_col() + 
+  coord_flip() +
+  labs(title = "Top security per capita in 2016", 
+       x = "Provinces", y = "Security Spending per capita")
+
+security_spending %>%
+  filter(year == 2017) %>%
+  top_n(n = 15, wt = security_capita) %>%
+  ggplot(aes(x = reorder(factor(en_province), security_capita), y = security_capita, fill = region)) +
+  geom_col() + 
+  coord_flip() +
+  labs(title = "Top security per capita in 2017", 
+       x = "Provinces", y = "Security Spending per capita")
+
+security_spending %>%
+  filter(year == 2014) %>%
+  top_n(n = 15, wt = security_GDP_ratio) %>%
+  ggplot(aes(x = reorder(factor(en_province), security_GDP_ratio), 
+             y = security_GDP_ratio, fill = region)) +
+  geom_col() + 
+  coord_flip() +
+  labs(title = "Top security spending to GDP ratio in 2014", 
+       x = "Provinces", y = "Security Spending per capita")
+
+security_spending %>%
+  filter(year == 2015) %>%
+  top_n(n = 15, wt = security_GDP_ratio) %>%
+  ggplot(aes(x = reorder(factor(en_province), security_GDP_ratio), 
+             y = security_GDP_ratio, fill = region)) +
+  geom_col() + 
+  coord_flip() +
+  labs(title = "Top security spending to GDP ratio in 2015", 
+       x = "Provinces", y = "Security Spending per capita")
+
+security_spending %>%
+  filter(year == 2016) %>%
+  top_n(n = 15, wt = security_GDP_ratio) %>%
+  ggplot(aes(x = reorder(factor(en_province), security_GDP_ratio), 
+             y = security_GDP_ratio, fill = region)) +
+  geom_col() + 
+  coord_flip() +
+  labs(title = "Top security spending to GDP ratio in 2016", 
+       x = "Provinces", y = "Security Spending per capita")
+
+security_spending %>%
+  filter(year == 2017) %>%
+  top_n(n = 15, wt = security_GDP_ratio) %>%
+  ggplot(aes(x = reorder(factor(en_province), security_GDP_ratio), 
+             y = security_GDP_ratio, fill = region)) +
+  geom_col() + 
+  coord_flip() +
+  labs(title = "Top security spending to GDP ratio in 2017", 
+       x = "Provinces", y = "Security Spending per capita")
+
+```
+
+# Mapping the security spending
+
+A more comprehensive picture can be found in the following maps. 
+
+```{r mapping the per capita security spending}
+
+china_admin <- st_read("data/chn_admbnda_adm1_ocha/chn_admbnda_adm1_ocha.shp") %>%
+  filter(ADM1_ZH != "台湾省") 
+
+china_admin %>%
+  left_join(filter(security_spending, year == 2014), by = c("ADM1_ZH" = "province")) %>%
+  ggplot() +
+  geom_sf(aes(fill = security_capita)) +
+  scale_fill_viridis(option = "inferno", labels = scales::dollar, na.value = "white") +
+  labs(title = "2014 per capita security spending", fill = "Per capita security spending")
+
+china_admin %>%
+  left_join(filter(security_spending, year == 2015), by = c("ADM1_ZH" = "province")) %>%
+  ggplot() +
+  geom_sf(aes(fill = security_capita)) +
+  scale_fill_viridis(option = "inferno", labels = scales::dollar, na.value = "white") +
+  labs(title = "2015 per capita security spending", fill = "Per capita security spending")
+
+china_admin %>%
+  left_join(filter(security_spending, year == 2016), by = c("ADM1_ZH" = "province")) %>%
+  ggplot() +
+  geom_sf(aes(fill = security_capita)) +
+  scale_fill_viridis(option = "inferno", labels = scales::dollar, na.value = "white") +
+  labs(title = "2016 per capita security spending", fill = "Per capita security spending")
+
+china_admin %>%
+  left_join(filter(security_spending, year == 2017), by = c("ADM1_ZH" = "province")) %>%
+  ggplot() +
+  geom_sf(aes(fill = security_capita)) +
+  scale_fill_viridis(option = "inferno", labels = scales::dollar, na.value = "white") +
+  labs(title = "2017 per capita security spending", fill = "Per capita security spending")
+
+```
+
+
+
+
