@@ -245,7 +245,7 @@ debt_analysis %>%
   geom_col() + 
   coord_flip() +
   labs(title = "Top 10 Government Debt Issuance 2015", 
-       x = "Provinces", y = "Debt Issuance to Tax Ratio")
+       x = "Provinces", y = "Debt Issuance (100 million yuan)")
 ```
 
 ![](China_Local_Debt_files/figure-markdown_github/column%20chart-2.png)
@@ -258,7 +258,7 @@ debt_analysis %>%
   geom_col() + 
   coord_flip() +
   labs(title = "Top 10 Government Debt Issuance 2016", 
-       x = "Provinces", y = "Debt Issuance to Tax Ratio")
+       x = "Provinces", y = "Debt Issuance (100 million yuan)")
 ```
 
 ![](China_Local_Debt_files/figure-markdown_github/column%20chart-3.png)
@@ -271,7 +271,7 @@ debt_analysis %>%
   geom_col() + 
   coord_flip() +
   labs(title = "Top 10 Government Debt Issuance 2017", 
-       x = "Provinces", y = "Debt Issuance to Tax Ratio")
+       x = "Provinces", y = "Debt Issuance (100 million yuan)")
 ```
 
 ![](China_Local_Debt_files/figure-markdown_github/column%20chart-4.png)
@@ -284,7 +284,7 @@ debt_analysis %>%
   geom_col() + 
   coord_flip() +
   labs(title = "Top 10 LGFV Debt Issuance 2018", 
-       x = "Provinces", y = "Debt Issuance to Tax Ratio")
+       x = "Provinces", y = "Debt Issuance (100 million yuan)")
 ```
 
 ![](China_Local_Debt_files/figure-markdown_github/column%20chart-5.png)
@@ -432,6 +432,17 @@ z.base <- zelig(GOVdebt_to_tax ~ population_log + GDP_log + revenue_alltax.x_log
 ``` r
 z.base_yearlag <- zelig(GOVdebt_to_tax ~ population_log + GDP_log + revenue_alltax.y_log,
                         model = "normal", data = debt_regression)
+```
+
+    ## How to cite this model in Zelig:
+    ##   R Core Team. 2008.
+    ##   normal: Normal Regression for Continuous Dependent Variables
+    ##   in Christine Choirat, Christopher Gandrud, James Honaker, Kosuke Imai, Gary King, and Olivia Lau,
+    ##   "Zelig: Everyone's Statistical Software," http://zeligproject.org/
+
+``` r
+z.region <- zelig(GOVdebt_to_tax ~ population_log + revenue_alltax.x_log + region,
+                  model = "normal", data = debt_regression)
 ```
 
     ## How to cite this model in Zelig:
@@ -640,6 +651,40 @@ summary(z.base_yearlag)
     ## Residual deviance: 17.961  on 85  degrees of freedom
     ##   (179 observations deleted due to missingness)
     ## AIC: 120.13
+    ## 
+    ## Number of Fisher Scoring iterations: 2
+    ## 
+    ## Next step: Use 'setx' method
+
+``` r
+summary(z.region)
+```
+
+    ## Model: 
+    ## 
+    ## Call:
+    ## z5$zelig(formula = GOVdebt_to_tax ~ population_log + revenue_alltax.x_log + 
+    ##     region, data = debt_regression)
+    ## 
+    ## Deviance Residuals: 
+    ##      Min        1Q    Median        3Q       Max  
+    ## -1.17454  -0.21643  -0.02769   0.21691   1.38381  
+    ## 
+    ## Coefficients:
+    ##                      Estimate Std. Error t value Pr(>|t|)
+    ## (Intercept)           0.84616    0.55082   1.536  0.12796
+    ## population_log        0.58959    0.25451   2.317  0.02277
+    ## revenue_alltax.x_log -0.70267    0.26763  -2.625  0.01015
+    ## regioneast           -0.03195    0.16783  -0.190  0.84946
+    ## regionnortheast       0.31077    0.18410   1.688  0.09483
+    ## regionwest            0.40425    0.14304   2.826  0.00579
+    ## 
+    ## (Dispersion parameter for gaussian family taken to be 0.2012769)
+    ## 
+    ##     Null deviance: 29.900  on 96  degrees of freedom
+    ## Residual deviance: 18.316  on 91  degrees of freedom
+    ##   (171 observations deleted due to missingness)
+    ## AIC: 127.58
     ## 
     ## Number of Fisher Scoring iterations: 2
     ## 

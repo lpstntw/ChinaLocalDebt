@@ -255,7 +255,7 @@ debt_analysis %>%
   geom_col() + 
   coord_flip() +
   labs(title = "Top 10 Government Debt Issuance 2015", 
-       x = "Provinces", y = "Debt Issuance to Tax Ratio")
+       x = "Provinces", y = "Debt Issuance (100 million yuan)")
   
 debt_analysis %>%
   filter(year == 2016) %>%
@@ -264,7 +264,7 @@ debt_analysis %>%
   geom_col() + 
   coord_flip() +
   labs(title = "Top 10 Government Debt Issuance 2016", 
-       x = "Provinces", y = "Debt Issuance to Tax Ratio")
+       x = "Provinces", y = "Debt Issuance (100 million yuan)")
 
 debt_analysis %>%
   filter(year == 2017) %>%
@@ -273,7 +273,7 @@ debt_analysis %>%
   geom_col() + 
   coord_flip() +
   labs(title = "Top 10 Government Debt Issuance 2017", 
-       x = "Provinces", y = "Debt Issuance to Tax Ratio")
+       x = "Provinces", y = "Debt Issuance (100 million yuan)")
 
 debt_analysis %>%
   filter(year == 2018) %>%
@@ -282,7 +282,7 @@ debt_analysis %>%
   geom_col() + 
   coord_flip() +
   labs(title = "Top 10 LGFV Debt Issuance 2018", 
-       x = "Provinces", y = "Debt Issuance to Tax Ratio")
+       x = "Provinces", y = "Debt Issuance (100 million yuan)")
 
 debt_analysis %>%
   filter(year == 2015) %>%
@@ -382,6 +382,9 @@ z.base <- zelig(GOVdebt_to_tax ~ population_log + GDP_log + revenue_alltax.x_log
 z.base_yearlag <- zelig(GOVdebt_to_tax ~ population_log + GDP_log + revenue_alltax.y_log,
                         model = "normal", data = debt_regression)
 
+z.region <- zelig(GOVdebt_to_tax ~ population_log + revenue_alltax.x_log + region,
+                  model = "normal", data = debt_regression)
+
 z.transfer <- zelig(GOVdebt_to_tax ~ population_log + GDP_log + revenue_central_transfer.x_log, 
                     model = "normal", data = debt_regression)
 
@@ -429,6 +432,7 @@ z.all_yearlag <- zelig(GOVdebt_to_tax ~ population_log + GDP_log + revenue_allta
 
 summary(z.base)
 summary(z.base_yearlag)
+summary(z.region)
 summary(z.transfer)
 summary(z.transfer_yearlag)
 summary(z.transfer_control)
